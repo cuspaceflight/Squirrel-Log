@@ -7,9 +7,9 @@ import android.hardware.SensorEventListener;
 public class OrientationLog extends Logger implements SensorEventListener {
 
     private static final String LOG_NAME = "orientation";
-
-    protected String logName() {
-        return LOG_NAME;
+    
+    public OrientationLog() {
+        super(LOG_NAME);
     }
 
     @Override

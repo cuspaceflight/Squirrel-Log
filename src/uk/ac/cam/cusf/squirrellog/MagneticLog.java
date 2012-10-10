@@ -8,8 +8,8 @@ public class MagneticLog extends Logger implements SensorEventListener {
 
     private static final String LOG_NAME = "magnetic";
 
-    protected String logName() {
-        return LOG_NAME;
+    public MagneticLog() {
+        super(LOG_NAME);
     }
 
     @Override

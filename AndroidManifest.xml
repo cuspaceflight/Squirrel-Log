@@ -14,6 +14,13 @@
 				<action android:name="uk.ac.cam.cusf.squirrellog.LOG_SERVICE" />
 			</intent-filter>
 		</service>
+		
+		<receiver android:name=".CommandReceiver"> 
+            <intent-filter> 
+                <action android:name="uk.ac.cam.cusf.intent.SMS_RECEIVED" /> 
+            </intent-filter> 
+        </receiver>
+		
 	</application>
 	<uses-sdk android:minSdkVersion="7" />
 

@@ -19,6 +19,7 @@ public class LogService extends Service {
     public final static String TAG = "SquirrelLog";
 
     public static long instance = 0;
+    public static String path;
 
     private NotificationManager nManager;
     private SensorManager sensorMan;
@@ -37,6 +38,8 @@ public class LogService extends Service {
 
     private boolean RUNNING = false;
 
+    private Context context;
+    
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -44,11 +47,16 @@ public class LogService extends Service {
 
     @Override
     public void onCreate() {
+        
+        context = this.getApplicationContext();
+        
         nManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         sensorMan = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         telMan = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         showNotification();
+        
+        path = getFilesDir().getAbsolutePath();
     }
 
     @Override
@@ -59,6 +67,8 @@ public class LogService extends Service {
 
         closeLogs();
         nManager.cancel(1);
+        
+        LogStatus.setRunning(false);
     }
 
     @Override
@@ -68,6 +78,7 @@ public class LogService extends Service {
             openLogs();
             registerListeners();
             RUNNING = true;
+            LogStatus.setRunning(true);
         }
 
         return START_STICKY;
@@ -78,7 +89,7 @@ public class LogService extends Service {
         accelerometerLog = new AccelerometerLog();
         magneticLog = new MagneticLog();
         orientationLog = new OrientationLog();
-        locationLog = new LocationLog();
+        locationLog = new LocationLog(context);
         gpsStatusListener = new GpsStatusLog(locMan);
         gpsNmeaListener = new NmeaLog();
         telephonyLog = new TelephonyLog();

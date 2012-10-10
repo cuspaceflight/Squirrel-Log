@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 
@@ -55,8 +54,7 @@ public class LogcatLog {
     private boolean openFile() {
         LOG_COUNT++; // So as not to append to previous log file (some logcat
                      // entries would be duplicated)
-        File exportDir = new File(Environment.getExternalStorageDirectory(),
-                "SquirrelLog/" + LogService.instance);
+        File exportDir = new File(LogService.path, String.valueOf(LogService.instance));
         if (!exportDir.exists()) {
             exportDir.mkdirs();
         }
@@ -102,7 +100,7 @@ public class LogcatLog {
             @Override
             public void run() {
                 try {
-
+                    
                     if (out != null) {
                         String[] cmd = new String[] { "logcat", "-v", "time",
                                 "*:I" };

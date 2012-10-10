@@ -12,15 +12,8 @@ public class BatteryLog extends Logger {
 
     public final BroadcastReceiver batteryListener;
 
-    protected String logName() {
-        return LOG_NAME;
-    }
-
     protected BatteryLog() {
-        super();
-
-        logInterval = 0; // We want every battery update, regardless of how
-                         // often they occur
+        super(LOG_NAME, 0);
 
         batteryListener = new BroadcastReceiver() {
             @Override

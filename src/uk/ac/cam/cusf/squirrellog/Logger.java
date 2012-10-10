@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import android.os.Environment;
 import android.util.Log;
 
 public abstract class Logger {
@@ -20,6 +19,8 @@ public abstract class Logger {
     public static final long FLUSH_TIME = 60000; // Flush the BufferedWriter
                                                  // every minute
 
+    private final String logName;
+    
     private BufferedWriter writer;
     private long lastLog = 0;
     private boolean closed = false;
@@ -28,21 +29,25 @@ public abstract class Logger {
     private boolean ERROR = false;
 
     // Minimum time (in milliseconds) between successive log updates
-    protected long logInterval = 500;
+    private long logInterval;
 
-    protected abstract String logName();
-
-    protected Logger() {
+    protected Logger(String logName, long logInterval) {
+        this.logName = logName;
+        this.logInterval = logInterval;
         openFile();
+    }
+    
+    protected Logger(String logName) {
+        this(logName, 500);
     }
 
     private boolean openFile() {
-        File exportDir = new File(Environment.getExternalStorageDirectory(),
-                "SquirrelLog/" + LogService.instance);
+        File exportDir = new File(LogService.path, String.valueOf(LogService.instance));
         if (!exportDir.exists()) {
             exportDir.mkdirs();
         }
-        File file = new File(exportDir, logName() + EXT);
+        File file = new File(exportDir, logName + EXT);
+        Log.i(TAG, file.getAbsolutePath());
         try {
             if (!file.exists())
                 file.createNewFile();
@@ -51,8 +56,8 @@ public abstract class Logger {
             Log.i(TAG, file.getName() + " opened for logging");
             ERROR = false;
         } catch (IOException e) {
-            Log.e(TAG, "IOException in creating/opening file (" + logName()
-                    + ")", e);
+            Log.e(TAG, "IOException in creating/opening file ("
+                    + logName + ")", e);
             ERROR = true;
         }
         openTime = System.currentTimeMillis();
@@ -65,7 +70,7 @@ public abstract class Logger {
             return false;
 
         if (ERROR && System.currentTimeMillis() - openTime > RETRY_TIME) {
-            Log.i(TAG, "Attempting to reopen " + logName());
+            Log.i(TAG, "Attempting to reopen " + logName);
             openFile();
         }
 
@@ -83,7 +88,7 @@ public abstract class Logger {
                 lastLog = time;
                 return true;
             } catch (IOException e) {
-                Log.e(TAG, "IOException in append() (" + logName() + ")", e);
+                Log.e(TAG, "IOException in append() (" + logName + ")", e);
                 ERROR = true;
                 return false;
             }
@@ -97,10 +102,10 @@ public abstract class Logger {
         try {
             if (writer != null) {
                 writer.close();
-                Log.i(TAG, logName() + EXT + " closed");
+                Log.i(TAG, logName + EXT + " closed");
             }
         } catch (IOException e) {
-            Log.e(TAG, "IOException in close() (" + logName() + ")", e);
+            Log.e(TAG, "IOException in close() (" + logName + ")", e);
         }
     }
 

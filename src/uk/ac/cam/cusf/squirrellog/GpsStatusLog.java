@@ -9,13 +9,8 @@ public class GpsStatusLog extends Logger implements GpsStatus.Listener {
     private static final String LOG_NAME = "satellites";
     private LocationManager locMan;
 
-    protected String logName() {
-        return LOG_NAME;
-    }
-
     protected GpsStatusLog(LocationManager locMan) {
-        super();
-        logInterval = 0;
+        super(LOG_NAME, 0);
         this.locMan = locMan;
     }
 

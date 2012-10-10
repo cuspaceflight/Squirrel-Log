@@ -14,14 +14,8 @@ public class TelephonyLog extends Logger {
 
     public final PhoneStateListener phoneStateListener;
 
-    protected String logName() {
-        return LOG_NAME;
-    }
-
     protected TelephonyLog() {
-        super();
-
-        logInterval = 0; // We want to log *every* telephony update
+        super(LOG_NAME, 0);
 
         this.phoneStateListener = new PhoneStateListener() {
 

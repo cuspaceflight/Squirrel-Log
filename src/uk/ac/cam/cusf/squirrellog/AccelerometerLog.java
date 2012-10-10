@@ -8,8 +8,8 @@ public class AccelerometerLog extends Logger implements SensorEventListener {
 
     private static final String LOG_NAME = "accelerometer";
 
-    protected String logName() {
-        return LOG_NAME;
+    public AccelerometerLog() {
+        super(LOG_NAME);
     }
 
     @Override

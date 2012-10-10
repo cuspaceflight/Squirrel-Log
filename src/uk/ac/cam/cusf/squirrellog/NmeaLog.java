@@ -6,13 +6,8 @@ public class NmeaLog extends Logger implements NmeaListener {
 
     private static final String LOG_NAME = "nmea";
 
-    protected String logName() {
-        return LOG_NAME;
-    }
-
     public NmeaLog() {
-        super();
-        logInterval = 0;
+        super(LOG_NAME, 0);
     }
 
     @Override
